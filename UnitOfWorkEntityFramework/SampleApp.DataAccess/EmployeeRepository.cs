@@ -4,11 +4,10 @@ using DataAccessPatterns.EntityFrameworkImplementation;
 
 namespace SampleApp.DataAccess
 {
-    // On the client side you can use the generic EntityFrameworkRepository<T> implementation.
-    // However, you can add specific entity logic using concrete repository implementations too.
+    // Besides having the generic EntityFrameworkRepository<T> implementation, you can add specific entity logic using specialized repository implementations.
     public class EmployeeRepository : EntityFrameworkRepository<Employee>, IEmployeeRepository
     {
-        public EmployeeRepository(IDbSet<Employee> entities) : base(entities) { }
+        public EmployeeRepository(IDbSet<Employee> employees) : base(employees) { }
 
         // Get employees that are not yet assigned to any department.
         public IEnumerable<Employee> GetUnassigned()

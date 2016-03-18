@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using SampleApp.DataAccess;
-using DataAccessPatterns.EntityFrameworkImplementation;
 using DataAccessPatterns.Contracts;
 
 namespace SampleApp.UserInterface
@@ -10,24 +9,20 @@ namespace SampleApp.UserInterface
     {
         static void Main(string[] args)
         {
-            // Using a disposable Entity Framework database context instance.
-            using (var sampleDbContext = new SampleDatabaseEntities())
+            // Using a disposable data access service instance.
+            using (var sampleDataAccessService = new SampleDataAccesssService())
             {
-                // Initialize unit of work and repository implementations over the database context and its database entity sets.
-                // Of course, you can use a dependency injection framework to resolve IUnitOfWork, IRepository<T> or specialized interfaces instead.
-                // You can then always switch to a different data access technology provided that you implement the same interfaces.
-                var unitOfWork = new EntityFrameworkUnitOfWork(sampleDbContext);
+                // Initialize unit of work and repository implementations.
+                IUnitOfWork unitOfWork = sampleDataAccessService.GetUnitOfWork();
                 // You can use either generic type or specialized repository instances.
-                var departmentRepository = new EntityFrameworkRepository<Department>(sampleDbContext.Departments);
-                var employeeRepository = new EmployeeRepository(sampleDbContext.Employees);
+                IRepository<Department> departmentRepository = sampleDataAccessService.GetRepository<Department>();
+                IEmployeeRepository employeeRepository = sampleDataAccessService.GetEmployeeRepository();
 
-                // Perform client side actions using the unit of work and repository instances.
                 ExecuteClientActions(unitOfWork, departmentRepository, employeeRepository);
             }
         }
 
-        // Client side actions work through data access pattern contracts (interfaces).
-        // Data object types (such as Department and Employee) can be POCOs so Entity Framework could be entirely replaced with another system.
+        // Client side actions are executed calling data access pattern interfaces.
         private static void ExecuteClientActions(IUnitOfWork unitOfWork, IRepository<Department> departmentRepository, IEmployeeRepository employeeRepository)
         {
             var developmentDepartment = departmentRepository.GetSingle(d => d.Name == "Development");

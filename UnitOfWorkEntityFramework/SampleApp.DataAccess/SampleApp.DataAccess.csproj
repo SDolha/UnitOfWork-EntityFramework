@@ -74,7 +74,9 @@
     </Compile>
     <Compile Include="EmployeeRepository.cs" />
     <Compile Include="IEmployeeRepository.cs" />
+    <Compile Include="ISampleDataAccesssService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SampleDataAccesssService.cs" />
     <Compile Include="SampleModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
