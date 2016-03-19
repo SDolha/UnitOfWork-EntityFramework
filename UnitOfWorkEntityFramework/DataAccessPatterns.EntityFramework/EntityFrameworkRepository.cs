@@ -4,7 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using DataAccessPatterns.Contracts;
 
-namespace DataAccessPatterns.EntityFrameworkImplementation
+namespace DataAccessPatterns.EntityFramework
 {
     // Implements IRepository<T> over IDbSet<T>, which is the interface implemented by entity sets generated as properties of database context objects by Entity Framework.
     // Note that the class remains generic, so you can reuse it for any entity set of any database context object.
@@ -14,37 +14,33 @@ namespace DataAccessPatterns.EntityFrameworkImplementation
         {
             if (entities == null)
                 throw new ArgumentNullException("entities");
-            this.entities = entities;
+            Entities = entities;
         }
 
-        private IDbSet<T> entities;
-        public IDbSet<T> Entities
-        {
-            get { return entities; }
-        }
+        protected IDbSet<T> Entities { get; private set; }
 
         // Get methods, delegating actions to IDbSet<T>.
         public IEnumerable<T> GetAll()
         {
-            return entities;
+            return Entities;
         }
         public IEnumerable<T> Get(Func<T, bool> query)
         {
-            return entities.Where(query);
+            return Entities.Where(query);
         }
         public T GetSingle(Func<T, bool> selector)
         {
-            return entities.Single(selector);
+            return Entities.Single(selector);
         }
         
         // Update methods, delegating actions to IDbSet<T>.
         public void Add(T item)
         {
-            entities.Add(item);
+            Entities.Add(item);
         }
         public void Remove(T item)
         {
-            entities.Remove(item);
+            Entities.Remove(item);
         }
     }
 }

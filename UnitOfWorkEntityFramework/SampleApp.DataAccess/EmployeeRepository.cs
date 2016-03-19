@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
-using DataAccessPatterns.EntityFrameworkImplementation;
+using DataAccessPatterns.EntityFramework;
 
 namespace SampleApp.DataAccess
 {
