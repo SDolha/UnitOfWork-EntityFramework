@@ -60,6 +60,10 @@ namespace SampleApp.UserInterface
             unassignedCount = employeeRepository.GetUnassigned().Count();
             Console.WriteLine($"Now there are {johnEmployeeCount} employees named John.");
             Console.WriteLine($"{unassignedCount} employees are still not yet assigned to a department.");
+
+            Console.WriteLine("Employees ordered by name:");
+            foreach (var employee in employeeRepository.GetAllOrderedByName())
+                Console.WriteLine($"\t{employee.LastName}, {employee.FirstName}");
         }
     }
 }

@@ -6,5 +6,6 @@ namespace SampleApp.DataAccess
     public interface IEmployeeRepository : IRepository<Employee>
     {
         IEnumerable<Employee> GetUnassigned();
+        IEnumerable<Employee> GetAllOrderedByName();
     }
 }
