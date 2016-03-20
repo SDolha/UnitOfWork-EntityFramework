@@ -3,10 +3,8 @@ using System;
 
 namespace SampleApp.DataAccess
 {
-    public interface ISampleDataAccesssService : IDisposable
+    public interface ISampleDataAccesssService : IDataAccessService, IDisposable
     {
-        IUnitOfWork GetUnitOfWork();
-        IRepository<T> GetRepository<T>() where T : class;
         IEmployeeRepository GetEmployeeRepository();
     }
 }
