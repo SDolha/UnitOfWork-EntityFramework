@@ -9,8 +9,8 @@ namespace SampleApp.UserInterface
     {
         static void Main(string[] args)
         {
-            // Using a disposable data access service instance.
-            using (var sampleDataAccessService = new SampleDataAccesssService())
+            // Using a disposable data access service instance. Dependency injection can also be used to obtain the actual instance to use.
+            using (ISampleDataAccessService sampleDataAccessService = new SampleDataAccessService())
             {
                 // Initialize unit of work and repository implementations.
                 IUnitOfWork unitOfWork = sampleDataAccessService.GetUnitOfWork();

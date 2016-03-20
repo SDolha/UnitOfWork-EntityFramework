@@ -52,7 +52,7 @@
     <Compile Include="EntityFrameworkRepository.cs" />
     <Compile Include="EntityFrameworkUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EntityFrameworkDataAccesssService.cs" />
+    <Compile Include="EntityFrameworkDataAccessService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -3,7 +3,7 @@ using System;
 
 namespace SampleApp.DataAccess
 {
-    public interface ISampleDataAccesssService : IDataAccessService, IDisposable
+    public interface ISampleDataAccessService : IDataAccessService, IDisposable
     {
         IEmployeeRepository GetEmployeeRepository();
     }
