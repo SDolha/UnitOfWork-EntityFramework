@@ -10,17 +10,18 @@ namespace SampleApp.DataAccess
     {
         public EmployeeRepository(IDbSet<Employee> entities) : base(entities) { }
 
-        // Gets employees that are assigned to a specific department.
-        public IEnumerable<Employee> GetAssignedToDepartment(Department department)
+        // Counts employees that are assigned to a specific department.
+        public int Count(Department department)
         {
-            // Using the get method of the base repository implementation.
-            return Get(e => e.Department == department);
+            // Using the count method of the base repository implementation.
+            return Count(e => e.Department == department);
         }
 
         // Gets employees that are not yet assigned to any department.
         public IEnumerable<Employee> GetUnassigned()
         {
-            return GetAssignedToDepartment(null);
+            // Using the get method of the base repository implementation.
+            return Get(e => e.Department == null);
         }
 
         // Gets all employees ordered by last and first names.
