@@ -18,6 +18,7 @@ namespace SampleApp.DataAccess
         public SampleDatabaseEntities()
             : base("name=SampleDatabaseEntities")
         {
+            this.Configuration.LazyLoadingEnabled = false;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

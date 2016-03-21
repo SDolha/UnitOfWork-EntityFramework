@@ -8,16 +8,22 @@ namespace SampleApp.DataAccess
     // Besides having the generic EntityFrameworkRepository<T> implementation, you can add specific entity logic using specialized repository implementations.
     public class EmployeeRepository : EntityFrameworkRepository<Employee>, IEmployeeRepository
     {
-        public EmployeeRepository(IDbSet<Employee> employees) : base(employees) { }
+        public EmployeeRepository(IDbSet<Employee> entities) : base(entities) { }
 
-        // Get employees that are not yet assigned to any department.
-        public IEnumerable<Employee> GetUnassigned()
+        // Gets employees that are assigned to a specific department.
+        public IEnumerable<Employee> GetAssignedToDepartment(Department department)
         {
             // Using the get method of the base repository implementation.
-            return Get(e => e.Department == null);
+            return Get(e => e.Department == department);
         }
 
-        // Get employees ordered by last and first names.
+        // Gets employees that are not yet assigned to any department.
+        public IEnumerable<Employee> GetUnassigned()
+        {
+            return GetAssignedToDepartment(null);
+        }
+
+        // Gets all employees ordered by last and first names.
         public IEnumerable<Employee> GetAllOrderedByName()
         {
             // Using the entity set of the base repository implementation and its protected item collection provider.

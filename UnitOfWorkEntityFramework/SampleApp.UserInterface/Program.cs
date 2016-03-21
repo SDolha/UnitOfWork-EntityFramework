@@ -26,7 +26,7 @@ namespace SampleApp.UserInterface
         private static void ExecuteClientActions(IUnitOfWork unitOfWork, IRepository<Department> departmentRepository, IEmployeeRepository employeeRepository)
         {
             var developmentDepartment = departmentRepository.GetSingle(d => d.Name == "Development");
-            var developerCount = developmentDepartment.Employees.Count();
+            var developerCount = employeeRepository.GetAssignedToDepartment(developmentDepartment).Count();
             var johnEmployeeCount = employeeRepository.Get(e => e.FirstName == "John").Count();
             var unassignedCount = employeeRepository.GetUnassigned().Count();
             Console.WriteLine($"Initially there are {developerCount} developers.");
@@ -43,7 +43,7 @@ namespace SampleApp.UserInterface
             unitOfWork.Commit();
             Console.WriteLine("John Daniels (developer) and John Spencer (not yet assigned) have been added.");
 
-            developerCount = developmentDepartment.Employees.Count();
+            developerCount = employeeRepository.GetAssignedToDepartment(developmentDepartment).Count();
             johnEmployeeCount = employeeRepository.Get(e => e.FirstName == "John").Count();
             unassignedCount = employeeRepository.GetUnassigned().Count();
             Console.WriteLine($"Now there are {developerCount} developers.");

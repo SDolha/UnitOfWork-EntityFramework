@@ -76,7 +76,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="SampleDatabaseEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="SampleDatabaseEntities" annotation:LazyLoadingEnabled="false">
           <EntitySet Name="Departments" EntityType="Self.Department" />
           <EntitySet Name="Employees" EntityType="Self.Employee" />
           <AssociationSet Name="FK_Employees_Departments" Association="Self.FK_Employees_Departments">
