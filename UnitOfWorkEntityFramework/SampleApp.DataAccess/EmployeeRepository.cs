@@ -28,7 +28,7 @@ namespace SampleApp.DataAccess
         public IEnumerable<Employee> GetAllOrderedByName()
         {
             // Using the entity set of the base repository implementation and its protected item collection provider.
-            return GetItemCollection(Entities.OrderBy(e => e.LastName).ThenBy(e => e.FirstName));
+            return GetOutputCollection(Entities.OrderBy(e => e.LastName).ThenBy(e => e.FirstName));
         }
     }
 }
