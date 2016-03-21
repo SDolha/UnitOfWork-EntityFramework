@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using DataAccessPatterns.Contracts;
 using System.Collections.ObjectModel;
+using System.Linq.Expressions;
 
 namespace DataAccessPatterns.EntityFramework
 {
@@ -27,11 +28,11 @@ namespace DataAccessPatterns.EntityFramework
         /// <summary>
         /// Gets a collection including all entities of the repository or a specified page of the output.
         /// </summary>
-        /// <param name="includePaths">Optionally defines paths to child entities to load and associate to the returned entities.</param>
         /// <param name="pageIndex">Optionally defines the page to get.</param>
         /// <param name="pageSize">Optionally defines the page size.</param>
+        /// <param name="includePaths">Optionally defines paths to child entities to load and associate to the returned entities.</param>
         /// <exception cref="DataAccessException"/>
-        public IEnumerable<T> Get(IEnumerable<string> includePaths = null, int pageIndex = 0, int pageSize = int.MaxValue)
+        public IEnumerable<T> Get(int pageIndex = 0, int pageSize = int.MaxValue, params Expression<Func<T, object>>[] includePaths)
         {
             return Get(query: null, includePaths: includePaths, pageIndex: pageIndex, pageSize: pageSize);
         }
@@ -40,11 +41,11 @@ namespace DataAccessPatterns.EntityFramework
         /// Gets a collection including entities of the repository that meet the specified query criteria or a specified page of the output.
         /// </summary>
         /// <param name="query">Defines criteria that the entities need to meet to be included in the result of the method call.</param>
-        /// <param name="includePaths">Optionally defines paths to child entities to load and associate to the returned entities.</param>
         /// <param name="pageIndex">Optionally defines the page to get.</param>
         /// <param name="pageSize">Optionally defines the page size.</param>
+        /// <param name="includePaths">Optionally defines paths to child entities to load and associate to the returned entities.</param>
         /// <exception cref="DataAccessException"/>
-        public IEnumerable<T> Get(Func<T, bool> query = null, IEnumerable<string> includePaths = null, int pageIndex = 0, int pageSize = int.MaxValue)
+        public IEnumerable<T> Get(Func<T, bool> query = null, int pageIndex = 0, int pageSize = int.MaxValue, params Expression<Func<T, object>>[] includePaths)
         {
             return Get<object>(query: query, orderSelector: null, includePaths: includePaths, pageIndex: pageIndex, pageSize: pageSize);
         }
@@ -53,13 +54,13 @@ namespace DataAccessPatterns.EntityFramework
         /// Gets a collection including all entities of the repository in the specified order or a specified page of the output.
         /// </summary>
         /// <param name="orderSelector">Defines output collection ordering.</param>
-        /// <param name="includePaths">Optionally defines paths to child entities to load and associate to the returned entities.</param>
         /// <param name="pageIndex">Optionally defines the page to get.</param>
         /// <param name="pageSize">Optionally defines the page size.</param>
+        /// <param name="includePaths">Optionally defines paths to child entities to load and associate to the returned entities.</param>
         /// <exception cref="DataAccessException"/>
-        public IEnumerable<T> Get<TOrderKey>(Func<T, TOrderKey> orderSelector, IEnumerable<string> includePaths = null, int pageIndex = 0, int pageSize = int.MaxValue)
+        public IEnumerable<T> Get<TOrderKey>(Func<T, TOrderKey> orderSelector, int pageIndex = 0, int pageSize = int.MaxValue, params Expression<Func<T, object>>[] includePaths)
         {
-            return Get(query: null, orderSelector: orderSelector, includePaths: includePaths, pageIndex: pageIndex, pageSize: pageSize);
+            return Get(query: null, orderSelector: orderSelector, pageIndex: pageIndex, pageSize: pageSize, includePaths: includePaths);
         }
 
         /// <summary>
@@ -67,11 +68,11 @@ namespace DataAccessPatterns.EntityFramework
         /// </summary>
         /// <param name="query">Defines criteria that the entities need to meet to be included in the result of the method call.</param>
         /// <param name="orderSelector">Defines output collection ordering.</param>
-        /// <param name="includePaths">Optionally defines paths to child entities to load and associate to the returned entities.</param>
         /// <param name="pageIndex">Optionally defines the page to get.</param>
         /// <param name="pageSize">Optionally defines the page size.</param>
+        /// <param name="includePaths">Optionally defines paths to child entities to load and associate to the returned entities.</param>
         /// <exception cref="DataAccessException"/>
-        public IEnumerable<T> Get<TOrderKey>(Func<T, bool> query, Func<T, TOrderKey> orderSelector, IEnumerable<string> includePaths = null, int pageIndex = 0, int pageSize = int.MaxValue)
+        public IEnumerable<T> Get<TOrderKey>(Func<T, bool> query, Func<T, TOrderKey> orderSelector, int pageIndex = 0, int pageSize = int.MaxValue, params Expression<Func<T, object>>[] includePaths)
         {
             if (pageIndex < 0)
                 throw new ArgumentOutOfRangeException("pageIndex");
@@ -85,7 +86,7 @@ namespace DataAccessPatterns.EntityFramework
             return GetOutputCollection(entities);
         }
 
-        private IEnumerable<T> GetEntities<TOrderKey>(Func<T, bool> query, Func<T, TOrderKey> orderSelector, IEnumerable<string> includePaths)
+        private IEnumerable<T> GetEntities<TOrderKey>(Func<T, bool> query, Func<T, TOrderKey> orderSelector, params Expression<Func<T, object>>[] includePaths)
         {
             var queriableEntities = Entities.AsQueryable();
             if (includePaths != null)
@@ -169,7 +170,7 @@ namespace DataAccessPatterns.EntityFramework
         /// </summary>
         /// <param name="selector">Defines criteria that the single entity needs to meet to be retuned as result of the method call.</param>
         /// <exception cref="DataAccessException"/>
-        public T GetSingle(Func<T, bool> selector = null)
+        public T Single(Func<T, bool> selector = null)
         {
             var entities = Entities.AsEnumerable();
             if (selector != null)
@@ -203,7 +204,7 @@ namespace DataAccessPatterns.EntityFramework
         /// </summary>
         /// <param name="selector">Defines criteria that the single entity needs to meet to be retuned as result of the method call.</param>
         /// <exception cref="DataAccessException"/>
-        public T GetSingleOrDefault(Func<T, bool> selector = null)
+        public T SingleOrDefault(Func<T, bool> selector = null)
         {
             var entities = Entities.AsEnumerable();
             if (selector != null)
@@ -238,9 +239,9 @@ namespace DataAccessPatterns.EntityFramework
         /// <param name="query">Defines criteria that the entity needs to meet to be retuned as result of the method call.</param>
         /// <param name="includePaths">Optionally defines paths to child entities to load and associate to the returned entity.</param>
         /// <exception cref="DataAccessException"/>
-        public T GetFirst(Func<T, bool> query = null, IEnumerable<string> includePaths = null)
+        public T First(Func<T, bool> query = null, params Expression<Func<T, object>>[] includePaths)
         {
-            return GetFirst<object>(query: query, orderSelector: null, includePaths: includePaths);
+            return First<object>(query: query, orderSelector: null, includePaths: includePaths);
         }
 
         /// <summary>
@@ -250,7 +251,7 @@ namespace DataAccessPatterns.EntityFramework
         /// <param name="orderSelector">Defines collection ordering to consider.</param>
         /// <param name="includePaths">Optionally defines paths to child entities to load and associate to the returned entity.</param>
         /// <exception cref="DataAccessException"/>
-        public T GetFirst<TOrderKey>(Func<T, bool> query, Func<T, TOrderKey> orderSelector, IEnumerable<string> includePaths = null)
+        public T First<TOrderKey>(Func<T, bool> query, Func<T, TOrderKey> orderSelector, params Expression<Func<T, object>>[] includePaths)
         {
             var entities = GetEntities(query, orderSelector, includePaths);
             return GetFirstOutputItem(entities);
@@ -283,9 +284,9 @@ namespace DataAccessPatterns.EntityFramework
         /// <param name="query">Defines criteria that the entity needs to meet to be retuned as result of the method call.</param>
         /// <param name="includePaths">Optionally defines paths to child entities to load and associate to the returned entity.</param>
         /// <exception cref="DataAccessException"/>
-        public T GetFirstOrDefault(Func<T, bool> query = null, IEnumerable<string> includePaths = null)
+        public T FirstOrDefault(Func<T, bool> query = null, params Expression<Func<T, object>>[] includePaths)
         {
-            return GetFirstOrDefault<object>(query: query, orderSelector: null, includePaths: includePaths);
+            return FirstOrDefault<object>(query: query, orderSelector: null, includePaths: includePaths);
         }
 
         /// <summary>
@@ -295,7 +296,7 @@ namespace DataAccessPatterns.EntityFramework
         /// <param name="orderSelector">Defines collection ordering to consider.</param>
         /// <param name="includePaths">Optionally defines paths to child entities to load and associate to the returned entity.</param>
         /// <exception cref="DataAccessException"/>
-        public T GetFirstOrDefault<TOrderKey>(Func<T, bool> query, Func<T, TOrderKey> orderSelector, IEnumerable<string> includePaths = null)
+        public T FirstOrDefault<TOrderKey>(Func<T, bool> query, Func<T, TOrderKey> orderSelector, params Expression<Func<T, object>>[] includePaths)
         {
             var entities = GetEntities(query, orderSelector, includePaths);
             return GetFirstOrDefaultOutputItem(entities);

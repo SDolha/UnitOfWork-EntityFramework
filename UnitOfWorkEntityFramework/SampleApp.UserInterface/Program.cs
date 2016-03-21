@@ -25,7 +25,7 @@ namespace SampleApp.UserInterface
         // Client side actions are executed calling data access pattern interfaces.
         private static void ExecuteClientActions(IUnitOfWork unitOfWork, IRepository<Department> departmentRepository, IEmployeeRepository employeeRepository)
         {
-            var developmentDepartment = departmentRepository.GetSingle(d => d.Name == "Development");
+            var developmentDepartment = departmentRepository.Single(d => d.Name == "Development");
             var developerCount = employeeRepository.Count(developmentDepartment);
             var johnEmployeeCount = employeeRepository.Get(e => e.FirstName == "John").Count();
             var unassignedCount = employeeRepository.GetUnassigned().Count();
