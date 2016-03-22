@@ -51,6 +51,21 @@ namespace DataAccessPatterns.Contracts
         IEnumerable<T> Get<TOrderKey>(Func<T, bool> query, Func<T, TOrderKey> orderSelector, int pageIndex = 0, int pageSize = int.MaxValue, params Expression<Func<T, object>>[] includePaths);
 
         /// <summary>
+        /// Gets the page count for the collection including all entities of the repository or a specified page of the output.
+        /// </summary>
+        /// <param name="pageSize">Optionally defines the page size.</param>
+        /// <exception cref="DataAccessException"/>
+        int PageCount(int pageSize);
+
+        /// <summary>
+        /// Gets the page count for the collection including entities in the repository that meet the specified query criteria.
+        /// </summary>
+        /// <param name="query">Defines criteria that the entities need to meet to be included into the result of the method call.</param>
+        /// <param name="pageSize">Optionally defines the page size.</param>
+        /// <exception cref="DataAccessException"/>
+        int PageCount(Func<T, bool> query, int pageSize);
+
+        /// <summary>
         /// Gets the count of all entities of the repository.
         /// </summary>
         /// <exception cref="DataAccessException"/>

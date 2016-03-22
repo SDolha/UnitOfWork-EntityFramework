@@ -76,7 +76,7 @@ namespace DataAccessPatterns.EntityFramework
         {
             if (pageIndex < 0)
                 throw new ArgumentOutOfRangeException("pageIndex");
-            if (pageSize < 0)
+            if (pageSize <= 0 || (pageSize == int.MaxValue && pageIndex > 0))
                 throw new ArgumentOutOfRangeException("pageSize");
             var entities = GetEntities(query, orderSelector, includePaths);
             if (pageIndex > 0)
@@ -112,6 +112,52 @@ namespace DataAccessPatterns.EntityFramework
             {
                 var list = entities.ToList();
                 return new ReadOnlyCollection<T>(list);
+            }
+            catch (Exception exc)
+            {
+                throw new DataAccessException(exc.Message, exc);
+            }
+        }
+
+        #endregion
+
+        #region PageCount methods
+
+        /// <summary>
+        /// Gets the page count for the collection including all entities of the repository or a specified page of the output.
+        /// </summary>
+        /// <param name="pageSize">Optionally defines the page size.</param>
+        /// <exception cref="DataAccessException"/>
+        public int PageCount(int pageSize)
+        {
+            return PageCount(query: null, pageSize: pageSize);
+        }
+
+        /// <summary>
+        /// Gets the page count for the collection including entities in the repository that meet the specified query criteria.
+        /// </summary>
+        /// <param name="query">Defines criteria that the entities need to meet to be included into the result of the method call.</param>
+        /// <param name="pageSize">Optionally defines the page size.</param>
+        /// <exception cref="DataAccessException"/>
+        public int PageCount(Func<T, bool> query, int pageSize)
+        {
+            if (pageSize <= 0)
+                throw new ArgumentOutOfRangeException("pageSize");
+            var entities = Entities.AsEnumerable();
+            if (query != null)
+                entities = entities.Where(query);
+            return GetOutputPageCount(entities, pageSize);
+        }
+
+        /// <summary>
+        /// Browses the specified enumeration and returns the page count for the specified page size.
+        /// </summary>
+        /// <exception cref="DataAccessException"/>
+        protected int GetOutputPageCount(IEnumerable<T> entities, int pageSize)
+        {
+            try
+            {
+                return entities.Count() / pageSize;
             }
             catch (Exception exc)
             {
