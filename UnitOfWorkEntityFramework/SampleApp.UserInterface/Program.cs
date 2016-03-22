@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using SampleApp.DataAccess;
 using DataAccessPatterns.Contracts;
+using SampleApp.DataAccess;
 
 namespace SampleApp.UserInterface
 {
@@ -25,10 +25,20 @@ namespace SampleApp.UserInterface
         // Client side actions are executed calling data access pattern interfaces.
         private static void ExecuteClientActions(IUnitOfWork unitOfWork, IRepository<Department> departmentRepository, IEmployeeRepository employeeRepository)
         {
-            var developmentDepartment = departmentRepository.Single(d => d.Name == "Development");
+            // Include calls are supported by EntityFramework package, but DataAccessPatterns.EntityFramework provides an including params argument for convenience as well.
+            var departments = departmentRepository.Get(items => items.OrderBy(d => d.Name), d => d.Employees);
+            Console.WriteLine($"Initially there are {departments.Count} departments:");
+            foreach (var department in departments)
+            {
+                Console.WriteLine($" - {department.Name} with {department.Employees.Count} employees:");
+                foreach (var employee in department.Employees)
+                    Console.WriteLine($"   - {employee.FirstName} {employee.LastName}");
+            }
+
+            var developmentDepartment = departmentRepository.Get(items => items.Where(d => d.Name == "Development").Single());
             var developerCount = employeeRepository.Count(developmentDepartment);
-            var johnEmployeeCount = employeeRepository.Get(e => e.FirstName == "John").Count();
-            var unassignedCount = employeeRepository.GetUnassigned().Count();
+            var johnEmployeeCount = employeeRepository.Count(items => items.Where(e => e.FirstName == "John"));
+            var unassignedCount = employeeRepository.CountUnassigned();
             Console.WriteLine($"Initially there are {developerCount} developers.");
             Console.WriteLine($"There are {johnEmployeeCount} employees named John.");
             Console.WriteLine($"{unassignedCount} employees are not yet assigned to a department.");
@@ -44,8 +54,8 @@ namespace SampleApp.UserInterface
             Console.WriteLine("John Daniels (developer) and John Spencer (not yet assigned) have been added.");
 
             developerCount = employeeRepository.Count(developmentDepartment);
-            johnEmployeeCount = employeeRepository.Get(e => e.FirstName == "John").Count();
-            unassignedCount = employeeRepository.GetUnassigned().Count();
+            johnEmployeeCount = employeeRepository.Count(items => items.Where(e => e.FirstName == "John"));
+            unassignedCount = employeeRepository.CountUnassigned();
             Console.WriteLine($"Now there are {developerCount} developers.");
             Console.WriteLine($"There are {johnEmployeeCount} employees named John.");
             Console.WriteLine($"{unassignedCount} employees are not yet assigned to a department.");
@@ -56,14 +66,14 @@ namespace SampleApp.UserInterface
             unitOfWork.Commit();
             Console.WriteLine("Employee John Spencer changed his first name to Johnny and became developer.");
 
-            johnEmployeeCount = employeeRepository.Get(e => e.FirstName == "John").Count();
-            unassignedCount = employeeRepository.GetUnassigned().Count();
+            johnEmployeeCount = employeeRepository.Count(items => items.Where(e => e.FirstName == "John"));
+            unassignedCount = employeeRepository.CountUnassigned();
             Console.WriteLine($"Now there are {johnEmployeeCount} employees named John.");
             Console.WriteLine($"{unassignedCount} employees are still not yet assigned to a department.");
 
-            Console.WriteLine("Employees ordered by name:");
+            Console.WriteLine("All employees ordered by name are:");
             foreach (var employee in employeeRepository.GetAllOrderedByName())
-                Console.WriteLine($"\t{employee.LastName}, {employee.FirstName}");
+                Console.WriteLine($" - {employee.LastName}, {employee.FirstName}");
         }
     }
 }

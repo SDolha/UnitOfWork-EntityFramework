@@ -1,34 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
-using DataAccessPatterns.EntityFramework;
 using System.Linq;
+using DataAccessPatterns.EntityFramework;
 
 namespace SampleApp.DataAccess
 {
     // Besides having the generic EntityFrameworkRepository<T> implementation, you can add specific entity logic using specialized repository implementations.
-    public class EmployeeRepository : EntityFrameworkRepository<Employee>, IEmployeeRepository
+    public class EmployeeRepository : Repository<Employee>, IEmployeeRepository
     {
         public EmployeeRepository(IDbSet<Employee> entities) : base(entities) { }
 
-        // Gets employees that are not yet assigned to any department.
-        public IEnumerable<Employee> GetUnassigned()
+        // Gets all employees ordered by last and first names.
+        public IEnumerable<Employee> GetAllOrderedByName()
         {
-            // Using the get method of the base repository implementation.
-            return Get(e => e.Department == null);
+            return Get(items => items.OrderBy(e => e.LastName).ThenBy(e => e.FirstName));
         }
 
         // Counts employees that are assigned to a specific department.
         public int Count(Department department)
         {
-            // Using the count method of the base repository implementation.
-            return Count(e => e.Department == department);
+            return Count(items => items.Where(e => e.DepartmentId == department.Id));
         }
 
-        // Gets all employees ordered by last and first names.
-        public IEnumerable<Employee> GetAllOrderedByName()
+        // Counts employees that are not yet assigned to any department.
+        public int CountUnassigned()
         {
-            // Using the entity set of the base repository implementation and its protected item collection provider.
-            return GetOutputCollection(Entities.OrderBy(e => e.LastName).ThenBy(e => e.FirstName));
+            return Count(items => items.Where(e => e.DepartmentId == null));
         }
     }
 }

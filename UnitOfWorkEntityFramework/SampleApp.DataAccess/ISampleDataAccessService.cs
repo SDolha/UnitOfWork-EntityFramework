@@ -1,5 +1,5 @@
-﻿using DataAccessPatterns.Contracts;
-using System;
+﻿using System;
+using DataAccessPatterns.Contracts;
 
 namespace SampleApp.DataAccess
 {
