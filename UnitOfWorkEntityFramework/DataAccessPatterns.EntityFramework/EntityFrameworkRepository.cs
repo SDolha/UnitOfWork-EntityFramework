@@ -157,7 +157,10 @@ namespace DataAccessPatterns.EntityFramework
         {
             try
             {
-                return entities.Count() / pageSize;
+                var count = entities.Count();
+                if (count == 0)
+                    return 0;
+                return (count - 1) / pageSize + 1;
             }
             catch (Exception exc)
             {
