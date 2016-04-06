@@ -16,7 +16,7 @@ namespace DataAccessPatterns.InMemory
         /// <summary>
         /// Initializes a repository object.
         /// </summary>
-        /// <param name="collecion">The item collection to bind the repository to.</param>
+        /// <param name="collection">The item collection to bind the repository to.</param>
         public Repository(ICollection<T> collection)
         {
             if (collection == null)
