@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp.DataAccess", "SampleApp.DataAccess\SampleApp.DataAccess.csproj", "{D58D8A3A-4C7A-4032-B5F7-14E313EB1F67}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessPatterns.Contracts", "DataAccessPatterns.Contracts\DataAccessPatterns.Contracts.csproj", "{D1F6624A-BDA6-49FF-9128-8C2678005CB0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessPatterns.EntityFramework", "DataAccessPatterns.EntityFramework\DataAccessPatterns.EntityFramework.csproj", "{EB7FC57A-2D8F-4954-BF3C-66F4EDEB1ABF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessPatterns.InMemory", "DataAccessPatterns.InMemory\DataAccessPatterns.InMemory.csproj", "{614B6860-8ECF-4AC5-9E28-AEE3F67D2D72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{EB7FC57A-2D8F-4954-BF3C-66F4EDEB1ABF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB7FC57A-2D8F-4954-BF3C-66F4EDEB1ABF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB7FC57A-2D8F-4954-BF3C-66F4EDEB1ABF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{614B6860-8ECF-4AC5-9E28-AEE3F67D2D72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{614B6860-8ECF-4AC5-9E28-AEE3F67D2D72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{614B6860-8ECF-4AC5-9E28-AEE3F67D2D72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{614B6860-8ECF-4AC5-9E28-AEE3F67D2D72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
